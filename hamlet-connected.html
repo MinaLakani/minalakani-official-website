@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Hamlet stage archive within Mina Lakani's official website.">
+<title>Hamlet | Mina Lakani</title>
+<style>
+:root{--ivory:#f2ebe2;--ink:#261f1b;--wine:#713f45;--line:rgba(38,31,27,.16)}
+*{box-sizing:border-box}html,body{height:100%;margin:0}body{overflow:hidden;background:var(--ivory);color:var(--ink)}
+.site-bar{position:fixed;z-index:10;inset:0 0 auto;height:106px;display:flex;align-items:center;justify-content:space-between;gap:2rem;padding:0 clamp(1.5rem,5vw,4.5rem);background:var(--ivory);border-bottom:1px solid var(--line);font-family:Georgia,"Times New Roman",serif}
+.monogram{display:grid;width:2.75rem;aspect-ratio:1;place-items:center;border:1px solid rgba(38,31,27,.32);border-radius:50%;font-family:Didot,"Bodoni MT",Georgia,serif;font-size:.95rem;letter-spacing:.08em;text-decoration:none;color:var(--ink)}
+.site-nav{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:clamp(1rem,3vw,2.3rem)}
+.site-nav a{color:var(--ink);font:400 .72rem Arial,sans-serif;letter-spacing:.13em;text-decoration:none;text-transform:uppercase;transition:color .25s ease,transform .25s ease}.site-nav a:hover{color:var(--wine);transform:translateY(-.1rem)}
+.stage{position:absolute;inset:0;overflow:hidden}.stage.gallery-is-open{z-index:20}.stage iframe{width:100%;height:100%;border:0;display:block;background:var(--ivory)}
+.archive-return{position:fixed;z-index:12;left:.6rem;bottom:max(.6rem,env(safe-area-inset-bottom));display:inline-flex;align-items:center;justify-content:center;max-width:calc(100vw - 1.2rem);min-height:2.75rem;padding:.55rem .72rem;border:1px solid rgba(113,63,69,.35);background:rgba(242,235,226,.84);color:var(--wine);box-shadow:0 .12rem .3rem rgba(38,31,27,.07);font:600 .63rem/1.35 Arial,sans-serif;letter-spacing:.06em;text-align:center;text-decoration:none;text-transform:uppercase;transition:background .2s ease,border-color .2s ease}
+@media(max-width:820px){.site-bar{height:auto;min-height:106px;align-items:flex-start;flex-direction:column;padding-top:1rem;padding-bottom:1rem}.site-nav{justify-content:flex-start}.archive-return{bottom:max(.6rem,env(safe-area-inset-bottom))}}
+@media(prefers-reduced-motion:reduce){.site-nav a,.archive-return{transition:none}.site-nav a:hover{transform:none}}
+</style>
+</head>
+<body>
+<header class="site-bar"><a class="monogram" href="index.html#home" aria-label="Return to Mina Lakani home">ML</a><nav class="site-nav" aria-label="Main website navigation"><a href="index.html#home">Home</a><a href="biography.html">Biography</a><a href="index.html#credits">Credits</a><a href="career-archive.html">Archive</a><a href="press-publications.html">Press</a></nav></header>
+<main class="stage"><iframe src="hamlet.html" title="Hamlet stage archive"></iframe></main>
+<a class="archive-return" href="career-archive.html#stage-archive" aria-label="Return to Career Archive" title="Return to Career Archive">← Career Archive</a>
+<script>
+/* Allow the gallery inside the Hamlet iframe to cover this page's navigation. */
+(function(){
+  const stage=document.querySelector('.stage');
+  const frame=stage&&stage.querySelector('iframe');
+  if(!stage||!frame)return;
+  window.addEventListener('message',function(event){
+    if(event.source!==frame.contentWindow || !event.data || event.data.type!=='mina-hamlet-photo-gallery')return;
+    stage.classList.toggle('gallery-is-open',event.data.open===true);
+  });
+  frame.addEventListener('load',function(){stage.classList.remove('gallery-is-open')});
+})();
+</script>
+</body>
+</html>
