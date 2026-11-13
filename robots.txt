@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://minalakani.com/sitemap.xml
