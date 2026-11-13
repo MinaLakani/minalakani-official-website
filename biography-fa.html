@@ -91,6 +91,9 @@
 @media(max-width:630px){.site-header{align-items:flex-start;gap:.5rem}.site-nav{gap:.55rem 1rem}.bio-language{font-size:.75rem}}
 
 /* Persian biography: RTL text, preserved photographic design */
+/* Persian words must remain intact: the English drop-cap splits مینا into isolated letters. */
+html[lang="fa"] .story-copy > p:not(.interview-links):first-of-type::first-letter{float:none;margin:0;color:inherit;font:inherit;line-height:inherit;text-shadow:none}
+
 html[lang="fa"] body{direction:ltr}
 html[lang="fa"] .bio-copy,html[lang="fa"] .chapters,html[lang="fa"] .story,html[lang="fa"] .final-section{direction:rtl;font-family:Tahoma,"Segoe UI",Arial,sans-serif}
 html[lang="fa"] .bio-copy{align-items:flex-start;text-align:right}
