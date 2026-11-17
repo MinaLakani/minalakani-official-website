@@ -250,17 +250,15 @@
 .site-connections{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.65rem clamp(1rem,2.5vw,2rem);padding:1.25rem 1.5rem;border-top:1px solid rgba(38,31,27,.16);background:#eee5dc;font:600 .68rem/1.5 Arial,Helvetica,sans-serif;letter-spacing:.12em;text-align:center;text-transform:uppercase}
 .site-connections a{display:inline-block;min-height:2.35rem;padding:.55rem .15rem;color:#574940;text-decoration:none;border-bottom:1px solid transparent}
 .site-connections a:hover,.site-connections a:focus-visible{color:#713f45;border-bottom-color:currentColor}
-  /* Mobile homepage paragraph readability: headings, labels and desktop stay unchanged. */
+  /* Credits only: make production descriptions and archive-card copy easier to read.
+     Applies to phone and desktop, without changing titles, years or other sections. */
+  .credits .credit-note { font-size:1.0625rem; line-height:1.68; }
+  .credits .jonoon-credit-fa { font-size:1.125rem; line-height:1.85; }
+  .credits .credit-discovery-copy p { font-size:1.0625rem; line-height:1.68; }
   @media (max-width:37.5rem) {
-    .hero-tagline { font-size:1.2rem; line-height:1.65; }
-    .journey > div > p,
-    .credits-header > p:not(.section-label),
-    .photos-header p:last-child { font-size:1.1875rem; line-height:1.7; }
-    .credit-discovery-copy p { font-size:1.0625rem; line-height:1.7; }
-    .credits-note,
-    .archive-context p,
-    .production-description { font-size:1.125rem; line-height:1.75; }
-    .archive-context .context-fa { font-size:1.1875rem; line-height:1.9; }
+    .credits .credit-note { font-size:1.125rem; line-height:1.72; }
+    .credits .jonoon-credit-fa { font-size:1.1875rem; line-height:1.9; }
+    .credits .credit-discovery-copy p { font-size:1.1875rem; line-height:1.75; }
   }
 </style>
 </head>
