@@ -250,15 +250,19 @@
 .site-connections{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.65rem clamp(1rem,2.5vw,2rem);padding:1.25rem 1.5rem;border-top:1px solid rgba(38,31,27,.16);background:#eee5dc;font:600 .68rem/1.5 Arial,Helvetica,sans-serif;letter-spacing:.12em;text-align:center;text-transform:uppercase}
 .site-connections a{display:inline-block;min-height:2.35rem;padding:.55rem .15rem;color:#574940;text-decoration:none;border-bottom:1px solid transparent}
 .site-connections a:hover,.site-connections a:focus-visible{color:#713f45;border-bottom-color:currentColor}
-  /* Credits only: make production descriptions and archive-card copy easier to read.
-     Applies to phone and desktop, without changing titles, years or other sections. */
-  .credits .credit-note { font-size:1.0625rem; line-height:1.68; }
-  .credits .jonoon-credit-fa { font-size:1.125rem; line-height:1.85; }
-  .credits .credit-discovery-copy p { font-size:1.0625rem; line-height:1.68; }
+  /* Credits typography: readable hierarchy for production names, dates, and descriptions.
+     Applies only to the homepage Credits lists and their archive-card descriptions. */
+  .credits .credit-meta { font-size:.875rem; line-height:1.5; margin-top:.35rem; }
+  .credits .credit-note { font-size:1rem; line-height:1.58; margin-top:.4rem; }
+  .credits .jonoon-credit-fa { font-size:1.0625rem; line-height:1.8; }
+  .credits .credit-discovery-copy p { font-size:1rem; line-height:1.6; }
   @media (max-width:37.5rem) {
-    .credits .credit-note { font-size:1.125rem; line-height:1.72; }
-    .credits .jonoon-credit-fa { font-size:1.1875rem; line-height:1.9; }
-    .credits .credit-discovery-copy p { font-size:1.1875rem; line-height:1.75; }
+    .credits .credit-list { gap:1.75rem; }
+    #theatre-credits > .credit-list { gap:1.75rem; }
+    .credits .credit-meta { font-size:.9rem; line-height:1.5; }
+    .credits .credit-note { font-size:1rem; line-height:1.6; }
+    .credits .jonoon-credit-fa { font-size:1.0625rem; line-height:1.8; }
+    .credits .credit-discovery-copy p { font-size:1rem; line-height:1.65; }
   }
 </style>
 </head>
