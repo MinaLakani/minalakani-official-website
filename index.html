@@ -260,9 +260,16 @@
     .credits .credit-list { gap:1.75rem; }
     #theatre-credits > .credit-list { gap:1.75rem; }
     .credits .credit-meta { font-size:.9rem; line-height:1.5; }
-    .credits .credit-note { font-size:1rem; line-height:1.6; }
+    /* Subtle, consistent body text emphasis on phones only. */
+    .credits .credit-note {
+      font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,Helvetica,sans-serif;
+      font-size:1.0625rem;
+      font-weight:500;
+      line-height:1.65;
+    }
+    .credits .credit-note[lang="fa"] { font-size:1.125rem; line-height:1.85; }
     .credits .jonoon-credit-fa { font-size:1.0625rem; line-height:1.8; }
-    .credits .credit-discovery-copy p { font-size:1rem; line-height:1.65; }
+    .credits .credit-discovery-copy p { font-size:1.0625rem; font-weight:500; line-height:1.65; }
   }
   /* Keep the festival credit on its own aligned line without a hanging separator. */
   .credits .credit-award-festival { margin-top:.1rem; }
