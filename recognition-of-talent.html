@@ -128,11 +128,13 @@ body { background: radial-gradient(ellipse 85% 65% at 52% 38%, #f8f3ea 0%, #e9df
 .signature .persian-credit{font-size:15px;font-weight:400;color:#5b4b40;margin-left:.42rem;white-space:nowrap;word-spacing:-.08em;line-height:1.45;}
 @media(max-width:700px){.archive-return{font-size:11px;padding:11px 13px}.signature .persian-credit{font-size:14px;}}
 
-/* Mobile art book: all prose must finish above the navigation footer. */
+/* Mobile art book: fixed page dimensions, measured once for the longest text. */
 @media(max-width:700px){
   .book{aspect-ratio:auto;max-height:none;height:auto;}
-  .book .page-inner{height:auto;min-height:100%;padding-bottom:105px;}
+  .book .page-inner{height:100%;min-height:0;padding-bottom:105px;}
   .book .page{height:100%;}
+  .book .measure-page{position:absolute!important;left:0!important;right:auto!important;top:0!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;visibility:hidden!important;pointer-events:none!important;z-index:-1!important;}
+  .book .measure-page .page-inner{height:auto!important;min-height:0!important;}
   .book .controls{bottom:13px;}
   .book .controls button,.book .controls .count{background:rgba(249,245,235,.97)!important;}
   .book .scan{max-height:none;width:auto;max-width:100%;height:auto;flex-shrink:0;}
@@ -164,7 +166,7 @@ const botanical=`<div class="leaf-art" aria-hidden="true"><svg viewBox="0 0 100 
 const pages=[
 `<div class="page-inner"><p class="kicker">Perspectives on Cinema</p><div class="line"></div><h1 class="hero-title">The<br>Recognition<br>of Talent</h1><div class="line" style="max-width:70px;margin-bottom:19px"></div><p class="signature">An Independent Critical Assessment<br><strong>Saeed Morovati</strong><span class="persian-credit" lang="fa" dir="rtl">«سعید&nbsp;مروتی»</span></p><p class="page-no">01</p></div>`,
 `<div class="page-inner"><p class="kicker">From the film archive</p><div class="line"></div>${botanical}<h2 class="subhead">A critical perspective</h2><p class="bodycopy">A historical assessment of Mina Lakani’s performances and the recognition of her abilities in Iranian cinema.</p><p class="signature">Saeed Morovati · Film Critic and Journalist<br>Circa 2006 · approximate year</p><p class="page-no">02</p></div>`,
-`<div class="page-inner"><p class="kicker">Original Persian article</p><div class="line"></div><img class="scan" src="${scanImage}" alt="Original Persian clipping written by Saeed Morovati"><p class="scanlabel" lang="fa" dir="rtl"><span class="scanlabel-prefix">نوشتهٔ</span> <span class="persian-credit persian-credit--scan">«سعید&nbsp;مروتی»</span></p><p class="page-no">03</p></div>`,
+`<div class="page-inner"><p class="kicker">Original Persian article</p><div class="line"></div><img class="scan" src="${scanImage}" width="920" height="1301" alt="Original Persian clipping written by Saeed Morovati"><p class="scanlabel" lang="fa" dir="rtl"><span class="scanlabel-prefix">نوشتهٔ</span> <span class="persian-credit persian-credit--scan">«سعید&nbsp;مروتی»</span></p><p class="page-no">03</p></div>`,
 `<div class="page-inner"><p class="kicker">From the original archive</p><div class="line"></div>${botanical}<h2 class="subhead">The critic’s words</h2><p class="bodycopy">The original Persian clipping is preserved on the preceding page. The following pages present an English translation of the full critical assessment.</p><p class="bodycopy">The English title is editorial and was not part of the original clipping. The author’s praise, reservations, and concluding judgment are retained.</p><p class="page-no">04</p></div>`,
 `<div class="page-inner"><p class="kicker">English translation · 01</p><div class="line"></div><h2 class="subhead" style="margin-top:18px">The beginning</h2><p class="bodycopy">Mina Lakani entered the world of acting amid the first signs of change in post-revolutionary Iranian cinema. During the early 1990s, Iranian cinema underwent a period of transformation, one aspect of which was the arrival of a new generation of young actors.</p><p class="bodycopy">The beginning of this development was marked by Behrouz Afkhami’s <cite class="film-title">“The Bride”</cite>, which introduced Niki Karimi and Abolfazl Pourarab as fresh, appealing young performers. In the years that followed, the path became somewhat smoother, and other actors entered the scene.</p><p class="page-no">05</p></div>`,
 `<div class="page-inner"><p class="kicker">English translation · 02</p><div class="line"></div><h2 class="subhead" style="margin-top:18px">An emerging actress</h2><p class="bodycopy">Among these actors, Mina Lakani emerged as something of a phenomenon. She began her film career with a small role in <cite class="film-title">“Remember the Flight”</cite>, directed by Hamid Rakhshani, and a year later portrayed an angel in Afkhami’s comedy <cite class="film-title">“Day of the Angel”</cite>.</p><p class="bodycopy">Although the role offered little dramatic scope, lacking complexity and dramatic rises and falls, it nevertheless gave Lakani an opportunity to demonstrate some of her abilities. She appeared alongside established performers such as <span class="actor-name">Ezzatollah Entezami</span> and <span class="actor-name">Akbar Abdi</span>.</p><p class="page-no">06</p></div>`,
@@ -191,24 +193,37 @@ const mobile=()=>window.matchMedia('(max-width:700px)').matches;
 let page=0, turning=false, dragging=false, startX=0, progress=0, direction=1;
 const spreadCount=()=>mobile()?pages.length:Math.ceil(pages.length/2);
 const at=n=>pages[Math.max(0,Math.min(pages.length-1,n))];
-// Measure the natural mobile content height, including a clear footer for page controls.
-function fitMobilePage(){
-  if(!mobile()){book.style.height='';return;}
+// All pages of the mobile book share one height, measured from the longest page.
+// Measure inside the book so its typography and padding match the displayed pages.
+let mobileBookWidth=0, uniformMobileHeight=0;
+function fitMobilePage(force=false){
+  if(!mobile()){
+    book.style.height='';
+    mobileBookWidth=0;
+    uniformMobileHeight=0;
+    return;
+  }
   const width=book.clientWidth;
   if(!width)return;
-  const naturalHeight=Math.ceil(width/.71);
-  book.style.height=naturalHeight+'px';
-  const content=right.querySelector('.page-inner');
-  if(!content)return;
-  const measuring=content.cloneNode(true);
-  measuring.style.cssText='position:absolute!important;left:-10000px!important;top:0!important;visibility:hidden!important;pointer-events:none!important;width:'+right.clientWidth+'px!important;height:auto!important;min-height:0!important;max-height:none!important;';
-  document.body.appendChild(measuring);
-  const required=Math.ceil(measuring.scrollHeight+12);
+  if(!force && mobileBookWidth===width && uniformMobileHeight){
+    book.style.height=uniformMobileHeight+'px';
+    return;
+  }
+  book.style.height=Math.ceil(width/.71)+'px';
+  const measuring=document.createElement('div');
+  measuring.className='page right measure-page';
+  measuring.setAttribute('aria-hidden','true');
+  book.appendChild(measuring);
+  let longest=Math.ceil(width/.71);
+  for(const markup of pages){
+    measuring.innerHTML=markup;
+    const inside=measuring.querySelector('.page-inner');
+    if(inside)longest=Math.max(longest,Math.ceil(inside.scrollHeight+12));
+  }
   measuring.remove();
-  book.style.height=Math.max(naturalHeight,required)+'px';
-  content.querySelectorAll('img').forEach(img=>{
-    if(!img.complete)img.addEventListener('load',fitMobilePage,{once:true});
-  });
+  mobileBookWidth=width;
+  uniformMobileHeight=longest;
+  book.style.height=longest+'px';
 }
 
 function render(){
@@ -294,5 +309,11 @@ book.addEventListener('click',e=>{
   else {flip(x<.5?-1:1)}
 });
 window.addEventListener('resize',()=>{if(!turning)render()});
+if(document.fonts && document.fonts.ready){
+  document.fonts.ready.then(()=>{if(mobile())fitMobilePage(true)});
+}
+const archivalScan=new Image();
+archivalScan.onload=()=>{if(mobile())fitMobilePage(true)};
+archivalScan.src=scanImage;
 render();
 </script></body></html>
